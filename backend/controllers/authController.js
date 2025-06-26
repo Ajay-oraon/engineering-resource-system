@@ -21,10 +21,8 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    console.log(user);
 
     const isMatch = await user.comparePassword(password);
-    console.log(`ismatch: ${isMatch}`);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -80,6 +78,9 @@ const updateProfile = async (req, res) => {
     if (name) user.name = name;
     if (skills) user.skills = skills;
     if (department) user.department = department;
+
+    // Save the updated user
+    await user.save();
 
     // Return updated user (without password)
     const updatedUser = await User.findById(user._id).select("-password");
